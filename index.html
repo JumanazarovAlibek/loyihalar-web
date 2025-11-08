@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevRepo - Professional Loyihalar Markazi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* CSS: 1. Asosiy o'zgaruvchilar va Global Sozlamalar */
+        :root {
+            --dark-bg: #121212; 
+            --card-bg: #1f1f1f; 
+            --header-bg: #282828;
+            --primary-text: #e0e0e0;
+            --secondary-text: #b0b0b0;
+            --accent-color: #00bcd4; /* Sian rangdagi aksent */
+            --danger-color: #ff5252;
+            --success-color: #4caf50;
+            --shadow-subtle: 0 6px 20px rgba(0, 0, 0, 0.5);
+            --border-radius-soft: 12px;
+            --transition-speed: 0.4s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            transition: color var(--transition-speed), background-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        body {
+            background-color: var(--dark-bg); 
+            color: var(--primary-text);
+            padding-top: 90px; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 92%;
+            margin: 0 auto;
+            flex-grow: 1;
+        }
+
+        /* CSS: 2. Header va Navigatsiya */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--header-bg);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .btn-action {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+            padding: 12px 25px;
+            border: none;
+            border-radius: var(--border-radius-soft);
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0, 188, 212, 0.3);
+        }
+
+        .btn-action:hover {
+            background-color: #00acc1; 
+            transform: translateY(-2px);
+        }
+        
+        .btn-action:disabled {
+            background-color: #444;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* CSS: 3. Asosiy Sarlavha */
+        h1 {
+            text-align: center;
+            margin: 60px 0 50px 0;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary-text); 
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 188, 212, 0.2);
+        }
+
+        /* CSS: 4. Filtr va Qidiruv Qismi */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid #333;
+        }
+
+        .controls input[type="text"],
+        .controls select {
+            padding: 14px 20px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            flex-grow: 1;
+            max-width: 450px;
+            background-color: #333;
+            color: var(--primary-text);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .controls input[type="text"]:focus,
+        .controls select:focus {
+            outline: 2px solid var(--accent-color);
+            border-color: var(--accent-color);
+            background-color: #383838;
+        }
+
+        /* CSS: 5. Loyihalar Galereyasi */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 45px;
+            padding-bottom: 70px;
+        }
+
+        /* CSS: 6. Loyiha Kartochkasi */
+        .project-card {
+            background-color: var(--card-bg);
+            padding: 35px;
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-subtle);
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.4, 1.2), box-shadow 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid #333;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Kartochka animatsiyasi */
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 188, 212, 0.1);
+        }
+        
+        .project-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .project-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .description {
+            margin-bottom: 25px;
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            flex-grow: 1;
+        }
+
+        /* Loyiha Status Badge'lari */
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.complete {
+            background-color: var(--success-color);
+            color: var(--dark-bg);
+        }
+
+        .status-badge.beta {
+            background-color: #ff9800; /* Amber */
+            color: var(--dark-bg);
+        }
+        
+        .tech-tags {
+            margin-top: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tech-tag {
+            display: inline-block;
+            background-color: #383838;
+            color: var(--primary-text);
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #555;
+        }
+
+        /* CSS: 7. Tugmalar va Linklar */
+        .links {
+            display: flex;
+            gap: 20px;
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px dashed #444;
+        }
+
+        .links a {
+            flex-grow: 1;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .live-demo {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+        }
+
+        .live-demo:hover {
+            background-color: #00acc1;
+            box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
+        }
+
+        .source-code {
+            background-color: #444;
+            color: var(--primary-text);
+            border: 2px solid #555;
+        }
+
+        .source-code:hover {
+            background-color: #555;
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+        }
+
+        /* CSS: 8. Modal va Forma */
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 50px;
+            border-radius: var(--border-radius-soft);
+            box-shadow: 0 15px 60px rgba(0, 0, 0, 0.7);
+            width: 90%;
+            max-width: 700px;
+            position: relative;
+            animation: fadeIn 0.4s ease-out;
+            border-top: 4px solid var(--accent-color);
+        }
+        
+        /* Modal animatsiyasi */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .close-btn {
+            color: var(--secondary-text);
+            font-size: 36px;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            background-color: #333;
+            border: 1px solid #555;
+            color: var(--primary-text);
+            padding: 14px;
+            border-radius: 6px;
+            resize: vertical;
+        }
+
+        /* Inputlarda fokus stili */
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
+        }
+
+
+        .form-message {
+            padding: 12px;
+            margin-top: 20px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+            display: none; /* Default yashirilgan */
+        }
+
+        .msg-error {
+            background-color: #3f1917;
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+        
+        .msg-success {
+            background-color: #1a381a;
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .msg-loading {
+            background-color: #1a1a38;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+        }
+        
+        /* CSS: 9. Footer */
+        footer {
+            margin-top: auto;
+            padding: 30px 0;
+            background-color: var(--header-bg);
+            text-align: center;
+            color: var(--secondary-text);
+            font-size: 0.95rem;
+            border-top: 1px solid #444;
+        }
+
+        /* CSS: 10. Responsiveness */
+        @media (max-width: 900px) {
+             .project-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+        @media (max-width: 600px) {
+            body {
+                padding-top: 140px;
+            }
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                padding: 10px 20px;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+            .links {
+                flex-direction: column;
+            }
+            .modal-content {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="navbar">
+            <a href="#" class="logo">Loyihalar saqlash web sayti <i class="fas fa-code-branch"></i></a>
+            <button class="btn-action" id="open-modal-btn">
+                <i class="fas fa-plus-circle"></i> Loyiha Qo'shish
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>Frontend Loyihalari Galereyasi</h1>
+
+        <div class="controls">
+            <input type="text" id="search-input" placeholder="Loyiha, texnologiya yoki tavsif bo'yicha qidiruv...">
+            <select id="tech-filter">
+                <option value="all">Barcha Texnologiyalar</option>
+            </select>
+        </div>
+
+        <div class="project-grid" id="project-list">
+            <p id="loading-message" class="msg-loading" style="grid-column: 1 / -1; display: block;">
+                <i class="fas fa-spinner fa-spin"></i> Loyihalar yuklanmoqda...
+            </p>
+        </div>
+        
+        <p id="no-projects-message" class="form-message msg-error" style="grid-column: 1 / -1; display: none;">
+            Kechirasiz, mezonlarga mos loyiha topilmadi.
+        </p>
+        
+        <p class="form-message msg-loading" style="grid-column: 1 / -1; display: block; margin-top: 20px;">
+            ⚠️ **ESLATMA:** Loyihalar faqat sizning brauzeringizda (Local Storage) saqlanadi. Boshqa kompyuterda ko'rinmaydi.
+        </p>
+
+    </div> 
+
+    <div id="add-project-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>GitHub orqali Loyihani Qo'shish</h2>
+            
+            <form id="add-project-form">
+                <div class="form-group">
+                    <label for="project-name">Loyiha Nomi:</label>
+                    <input type="text" id="project-name" required placeholder="Masalan: Dinamik Veb-kalkulyator">
+                </div>
+                <div class="form-group">
+                    <label for="project-desc">Loyiha Izohi:</label>
+                    <textarea id="project-desc" rows="4" required placeholder="Loyiha haqida qisqacha ma'lumot va ishlatilgan asosiy texnologiyalar"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="project-source-url"><i class="fab fa-github"></i> GitHub Manzili (Kod):</label>
+                    <input type="url" id="project-source-url" required placeholder="https://github.com/siz/loyihangiz">
+                </div>
+                
+                <button type="submit" class="btn-action btn-submit">Loyihani Saqlash</button>
+                <p id="form-message" class="form-message msg-error"></p>
+            </form>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; <span id="current-year"></span> Alibek Jumanazarov | Local Storage Versiyasi.</p>
+    </footer>
+
+    <script>
+        // JS: 1. Global O'zgaruvchilar va Elementlarga Murojaatlar
+        
+        const projectListElement = document.getElementById('project-list');
+        const searchInput = document.getElementById('search-input');
+        const techFilter = document.getElementById('tech-filter');
+        const loadingMessage = document.getElementById('loading-message');
+        const noProjectsMessage = document.getElementById('no-projects-message');
+        const modal = document.getElementById('add-project-modal');
+        const openModalBtn = document.getElementById('open-modal-btn');
+        const closeModalBtn = document.querySelector('.close-btn');
+        const addProjectForm = document.getElementById('add-project-form');
+        const formMessage = document.getElementById('form-message');
+        const submitBtn = document.querySelector('.btn-submit');
+        
+        const LOCAL_STORAGE_KEY = 'devhubProjects'; // Local Storage uchun kalit
+        let allProjectsCache = []; 
+        let isFetching = false; 
+
+        const projectStatuses = ['complete', 'beta', 'complete', 'beta', 'complete'];
+        
+        // JS: 2. Loyiha Kartochkasini Dinamik Yaratish
+        function createProjectCard(project, index) {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            card.setAttribute('data-id', project.id);
+            
+            const status = projectStatuses[index % projectStatuses.length];
+
+            const tagsHtml = (project.technologies || []).map(tech => 
+                `<span class="tech-tag">${tech}</span>`
+            ).join('');
+
+            card.innerHTML = `
+                <span class="status-badge ${status}">${status.toUpperCase()}</span>
+                <h3>${project.name}</h3>
+                <p class="description">${project.description}</p>
+                <div class="tech-tags">${tagsHtml}</div>
+                <div class="links">
+                    <a href="${project.liveUrl}" target="_blank" class="live-demo">
+                        <i class="fas fa-eye"></i> Jonli Demo
+                    </a>
+                    <a href="${project.sourceCodeUrl}" target="_blank" class="source-code">
+                        <i class="fab fa-github"></i> Kod
+                    </a>
+                </div>
+            `;
+            return card;
+        }
+
+        // JS: 3. Loyihalar Ro'yxatini Ekranga Chikarish
+        function renderProjects(filteredProjects = allProjectsCache) {
+            projectListElement.innerHTML = ''; 
+            loadingMessage.style.display = 'none';
+            noProjectsMessage.style.display = 'none';
+
+            if (filteredProjects.length === 0 && !isFetching) {
+                noProjectsMessage.style.display = 'block';
+                noProjectsMessage.textContent = "Kechirasiz, tanlangan mezonlarga mos loyiha topilmadi.";
+                return;
+            }
+
+            filteredProjects.forEach((project, index) => {
+                projectListElement.appendChild(createProjectCard(project, index));
+            });
+        }
+
+        // JS: 4. Filtrlash va Qidiruv Logikasi
+        function filterAndSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const selectedTech = techFilter.value.toLowerCase();
+
+            const filtered = allProjectsCache.filter(project => {
+                const projectTechs = project.technologies ? project.technologies.map(t => t.toLowerCase()) : [];
+
+                const matchesSearch = project.name.toLowerCase().includes(searchTerm) || 
+                                      project.description.toLowerCase().includes(searchTerm);
+
+                const matchesTech = selectedTech === 'all' || projectTechs.includes(selectedTech);
+
+                return matchesSearch && matchesTech;
+            });
+
+            renderProjects(filtered);
+        }
+
+        // JS: 5. Texnologiya Filtrini Dinamik To'ldirish
+        function populateTechFilter() {
+            const regex = /(react|vue|angular|javascript|html|css|tailwind|bootstrap|node|mongodb|firebase|python)/gi;
+            const allTechnologies = allProjectsCache.flatMap(p => 
+                p.description ? p.description.match(regex) || [] : []
+            );
+            
+            const uniqueTechnologies = [...new Set(allTechnologies.map(t => t.trim()))]
+                                        .map(t => t.charAt(0).toUpperCase() + t.slice(1))
+                                        .sort((a, b) => a.localeCompare(b)); 
+
+            techFilter.innerHTML = '<option value="all">Barcha Texnologiyalar</option>';
+
+            uniqueTechnologies.forEach(tech => {
+                const option = document.createElement('option');
+                option.value = tech;
+                option.textContent = tech;
+                techFilter.appendChild(option);
+            });
+        }
+        
+        // JS: 6. Ma'lumotlarni Local Storage'dan Yuklash
+        function fetchProjects() {
+            isFetching = true;
+            loadingMessage.style.display = 'block';
+            noProjectsMessage.style.display = 'none';
+
+            try {
+                const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+                // JSON ma'lumotlarini yuklash va ID bo'yicha teskari tartiblash (eng oxirgi qo'shilgan yuqorida)
+                allProjectsCache = data ? JSON.parse(data).sort((a, b) => b.id - a.id) : [];
+                
+                populateTechFilter(); 
+                renderProjects(); 
+
+            } catch (error) {
+                console.error("Local Storage'dan yuklashda xato:", error);
+                noProjectsMessage.textContent = "Ma'lumotlarni yuklashda xato yuz berdi.";
+                noProjectsMessage.style.display = 'block';
+            } finally {
+                isFetching = false;
+                loadingMessage.style.display = 'none';
+            }
+        }
+
+        // JS: 7. Yangi Loyiha Qo'shish (Local Storage'ga YOZISH)
+        function handleAddProject(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('project-name').value.trim();
+            const desc = document.getElementById('project-desc').value.trim();
+            const sourceUrl = document.getElementById('project-source-url').value.trim(); 
+            
+            if (!name || !desc || !sourceUrl || !sourceUrl.startsWith('http')) {
+                formMessage.textContent = 'Iltimos, barcha maydonlarni to‘ldiring va to‘g‘ri GitHub manzilini kiriting.';
+                formMessage.style.display = 'block';
+                return;
+            }
+            
+            formMessage.style.display = 'none';
+            formMessage.classList.remove('msg-error');
+            formMessage.classList.add('msg-loading');
+            formMessage.textContent = 'Loyihani mahalliy saqlash...';
+            formMessage.style.display = 'block';
+            submitBtn.disabled = true;
+
+            try {
+                // Yangi loyiha ID'sini generatsiya qilish (hozirgi vaqt tamg'asi)
+                const newId = Date.now();
+                const slug = name.replace(/\s/g, '-').toLowerCase();
+                
+                // Izohdan taxminiy texnologiyalarni olish
+                const techMatch = desc.match(/(react|vue|angular|javascript|html|css|tailwind|bootstrap|node|mongodb|python)/gi) || ["Frontend"];
+                const uniqueTechs = [...new Set(techMatch.map(t => t.charAt(0).toUpperCase() + t.slice(1)))];
+
+                const newProject = {
+                    id: newId, // Local Storage uchun ID
+                    name: name,
+                    description: desc,
+                    technologies: uniqueTechs, 
+                    sourceCodeUrl: sourceUrl,
+                    liveUrl: sourceUrl.replace('github.com', 'github.io').replace('.git', '') + (sourceUrl.includes('github.io') ? '' : '/'),
+                    createdAt: new Date().toISOString()
+                };
+                
+                // Local Storage'ga qo'shish
+                allProjectsCache.unshift(newProject); // Yangi loyihani ro'yxatning boshiga qo'shish
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allProjectsCache));
+                
+                // Muvaffaqiyat xabari va darhol UI ni yangilash
+                formMessage.textContent = "Loyihangiz muvaffaqiyatli saqlandi! (Lokal)";
+                formMessage.classList.remove('msg-loading');
+                formMessage.classList.add('msg-success');
+
+                addProjectForm.reset();
+                
+                // Muvaffaqiyat xabarini 1.5 soniya ko'rsatib, keyin yopish
+                setTimeout(() => {
+                    closeModal();
+                    fetchProjects(); // Local Storage'dan qayta yuklab, ro'yxatni yangilash
+                    submitBtn.disabled = false;
+                }, 1500);
+
+            } catch (error) {
+                console.error("Loyihani qo'shishda xato:", error);
+                formMessage.textContent = `Saqlash xatosi: ${error.message}.`;
+                formMessage.classList.add('msg-error');
+                submitBtn.disabled = false;
+            }
+        }
+
+        // JS: 8. Modal (Popup) Logikasi
+        function openModal() {
+            modal.classList.add('active');
+            addProjectForm.reset();
+            formMessage.style.display = 'none';
+            formMessage.classList.remove('msg-success');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            formMessage.style.display = 'none';
+        }
+
+        // JS: 9. Boshlanish (Initialization) Funksiyasi
+        function initializeApp() {
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            searchInput.addEventListener('input', filterAndSearch);
+            techFilter.addEventListener('change', filterAndSearch);
+            openModalBtn.addEventListener('click', openModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            addProjectForm.addEventListener('submit', handleAddProject);
+
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Local Storage'dan ma'lumotlarni yuklashni boshlash
+            fetchProjects();
+        }
+
+        // Dasturni ishga tushirish
+        initializeApp();
+    </script>
+</body>
+</html>
